@@ -1,4 +1,4 @@
-# Recipe Recommendation & Meal Planning App
+# MyFood+ — Recipe Recommendation & Meal Planning App
 
 A mobile recipe discovery and meal planning application developed as an academic group project using React Native, Expo, Node.js, Express, PostgreSQL, and TheMealDB API.
 
