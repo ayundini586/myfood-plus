@@ -1,8 +1,12 @@
 # MyFood+ — Recipe Recommendation & Meal Planning App
 
-A mobile recipe discovery and meal planning application developed as an academic group project using React Native, Expo, Node.js, Express, PostgreSQL, and TheMealDB API.
+MyFood+ is a mobile recipe discovery and meal planning application developed as an academic group project. The application helps users explore recipes, search for meals, view detailed cooking information, plan meals through a calendar, and manage favorite recipes.
 
-The application allows users to discover recipes, search meals, view recipe details, save favorites, and organize meal planning through a calendar interface.
+The project combines a React Native mobile interface, a Node.js and Express backend, PostgreSQL database integration using Neon, TheMealDB API, and a basic machine learning component for meal classification.
+
+## App Preview
+
+![MyFood+ Homepage](preview.png)
 
 ## Features
 
@@ -10,15 +14,16 @@ The application allows users to discover recipes, search meals, view recipe deta
 - Search recipes by keyword
 - View detailed recipe information
 - Filter recipes by category
+- View featured recipes
 - Save favorite recipes
 - Calendar-based meal planning
 - Integration with TheMealDB API
 - PostgreSQL database integration
-- Basic meal classification using a machine learning model
+- Basic machine learning-based meal classification
 
-## Technologies Used
+## Tech Stack
 
-### Mobile
+### Frontend
 - React Native
 - Expo
 - Expo Router
@@ -33,7 +38,7 @@ The application allows users to discover recipes, search meals, view recipe deta
 
 ### Database
 - PostgreSQL
-- Neon Database
+- Neon
 
 ### Machine Learning
 - Python
@@ -46,32 +51,59 @@ The application allows users to discover recipes, search meals, view recipe deta
 
 ## Project Structure
 
-    project/
+    myfood-plus/
     ├── backend/
     │   ├── ml/
     │   │   ├── meal_classifier.pkl
     │   │   └── predict.py
-    │   └── src/
-    │       ├── config/
-    │       ├── db/
-    │       ├── routes/
-    │       └── server.js
+    │   ├── src/
+    │   │   ├── config/
+    │   │   ├── db/
+    │   │   ├── routes/
+    │   │   └── server.js
+    │   ├── package.json
+    │   └── drizzle.config.js
     │
     ├── mobile/
     │   ├── app/
     │   ├── assets/
     │   ├── components/
     │   ├── constants/
-    │   └── services/
+    │   ├── context/
+    │   ├── hooks/
+    │   ├── services/
+    │   ├── utils/
+    │   └── package.json
+    │
+    ├── screenshots/
+    │   └── home.png
     │
     ├── .gitignore
     └── README.md
 
+## Application Flow
+
+The mobile application retrieves recipe information from TheMealDB API.
+
+The backend handles application services such as favorites and database operations, while PostgreSQL hosted on Neon is used to store favorite recipe data.
+
+    React Native / Expo
+            │
+            ├── TheMealDB API
+            │
+            └── Node.js / Express Backend
+                        │
+                        ├── PostgreSQL / Neon
+                        │
+                        └── Python ML Model
+
 ## Backend API
 
-The backend provides API endpoints for application health checks and favorite recipe management.
+The backend runs locally on:
 
-Main endpoints include:
+    http://localhost:5001
+
+Available endpoints include:
 
     GET    /api/health
     POST   /api/favorites
@@ -79,58 +111,48 @@ Main endpoints include:
     DELETE /api/favorites/:userId/:recipeId
     POST   /predict
 
+### Health Check
+
+    GET /api/health
+
+Example response:
+
+    {
+      "success": true
+    }
+
 ## Database
 
-The project uses PostgreSQL hosted on Neon.
+MyFood+ uses PostgreSQL hosted on Neon.
 
-The favorites table stores information including:
+The `favorites` table stores information such as:
 
 - User ID
 - Recipe ID
 - Recipe title
-- Image
+- Recipe image
+- Cook time
+- Servings
 - Category
 - Ingredient count
 - Instruction length
 - Creation timestamp
 
-## My Contribution
+Database credentials are stored locally using environment variables and are not included in this repository.
 
-### Testing & Debugging
+## Installation
 
-My contribution focused on testing and debugging the application.
+### 1. Clone the Repository
 
-- Performed manual testing on core application flows including recipe browsing, search, recipe details, calendar, and favorites.
-- Tested backend API endpoints and database connectivity.
-- Verified data insertion and retrieval using the Favorites API.
-- Helped identify integration and local environment issues between the mobile application, backend, database, and machine learning component.
-- Performed debugging and validation before preparing the project for documentation and portfolio presentation.
+    git clone https://github.com/ayundini586/myfood-plus.git
 
-## Testing
+Enter the project directory:
 
-The following core functionality was manually tested:
+    cd myfood-plus
 
-    Recipes / Home       ✓
-    Search               ✓
-    Recipe Details       ✓
-    Calendar             ✓
-    Backend Health API   ✓
-    Neon Database        ✓
-    Favorites API        ✓
+## Backend Setup
 
-## Known Limitation
-
-The Favorites backend API and PostgreSQL database integration were successfully tested independently.
-
-However, the Favorites feature from the mobile interface may experience a local environment compatibility issue related to the Python machine learning dependency and NumPy environment.
-
-The remaining application features can still be explored normally.
-
-## Environment Setup
-
-### Backend
-
-Navigate to the backend folder:
+Navigate to the backend directory:
 
     cd backend
 
@@ -138,21 +160,25 @@ Install dependencies:
 
     npm install
 
-Create a `.env` file:
+Create a `.env` file inside the backend directory:
 
-    DATABASE_URL=your_neon_database_connection_string
+    DATABASE_URL=your_postgresql_connection_string
 
 Start the backend:
 
     npm start
 
-The backend runs on:
+The backend should run on:
 
     http://localhost:5001
 
-### Mobile
+To check whether the backend is running:
 
-Navigate to the mobile folder:
+    http://localhost:5001/api/health
+
+## Mobile App Setup
+
+Open another terminal and navigate to the mobile directory:
 
     cd mobile
 
@@ -160,7 +186,7 @@ Install dependencies:
 
     npm install
 
-Start the Expo application:
+Start Expo:
 
     npm start
 
@@ -168,14 +194,82 @@ For web testing:
 
     npm run web
 
+The Expo web application typically runs on:
+
+    http://localhost:8081
+
+## Testing
+
+Manual smoke testing was performed on the main application flows.
+
+| Feature | Result |
+| --- | --- |
+| Recipes / Home | Working |
+| Recipe Search | Working |
+| Recipe Detail | Working |
+| Calendar | Working |
+| Backend Health API | Working |
+| PostgreSQL / Neon Connection | Working |
+| Favorites API - Add | Working |
+| Favorites API - Retrieve | Working |
+| Favorites Mobile Integration | Local environment issue |
+
+The backend Favorites API was independently tested by adding and retrieving recipe data from the Neon PostgreSQL database.
+
+## Known Limitation
+
+The Favorites backend API and PostgreSQL integration work when tested independently.
+
+However, the current local development environment has a compatibility issue in the machine learning integration involving the Python/NumPy environment. This can affect the Favorites flow from the mobile interface.
+
+The main recipe browsing, search, recipe detail, calendar, backend API, and database functionality can still be tested independently.
+
+## My Contribution
+
+### Testing & Debugging
+
+My contribution to this group project focused on testing and debugging the application.
+
+My responsibilities included:
+
+- Testing the main application flows
+- Testing recipe browsing, search, recipe details, calendar, and favorites
+- Testing backend API endpoints
+- Verifying backend and PostgreSQL connectivity
+- Testing data insertion and retrieval through the Favorites API
+- Identifying frontend-backend integration issues
+- Identifying local Python and machine learning environment compatibility issues
+- Assisting with project validation and documentation before preparing the project for portfolio presentation
+
+## Team
+
+This project was developed collaboratively by a team of five members as an academic project.
+
+### Team Members
+
+1. Ayundini Nursyahrin A. M.
+2. Felicia Pardamean
+3. Hani Huwaida Arista
+4. Jovita Niken A. P.
+5. Silva Yunisa N.
+
 ## Security
 
-Environment variables such as database credentials are stored locally in `.env` and are not included in the repository.
+Sensitive configuration files are excluded from the repository using `.gitignore`.
+
+The following files should never be committed:
+
+    .env
+    node_modules/
+
+Database passwords and Neon connection strings should remain private.
+
+## Repository
+
+GitHub:
+
+    https://github.com/ayundini586/myfood-plus
 
 ## Project Type
 
 Academic Group Project
-
-## Team
-
-This project was developed collaboratively by a team of five members.
